@@ -8,9 +8,7 @@ import Controls from "./components/Controls";
 
 export default function App() {
   const [todoText, setTodoText] = useState("");
-  const [todos, setTodos] = useState<Todo[]>(() => {
-    return JSON.parse(localStorage.getItem("todos") || "[]");
-  });
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [filter, setFilter] = useState<Filter>("all");
 
   // Derived state
@@ -21,15 +19,13 @@ export default function App() {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
-
-  useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
   // Handlers
   const handleAddTodo = (evt: React.KeyboardEvent<HTMLInputElement>) => {
+    if (todoText.trim() === "") return;
+
     if (evt.code.toLowerCase() === "enter") {
       setTodos((prev) => [
         ...prev,
