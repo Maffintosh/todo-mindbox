@@ -1,43 +1,44 @@
+import { useAppDispatch } from "../app/hooks";
+import { completedTodoCleared } from "../features/todo/todo-slice";
 import type { Filter } from "../lib/types";
 import Button from "./ui/Button";
 
 interface ControlsProps {
-  left: number;
+  itemsLeft: number;
   filter: Filter;
-  onClick: () => void;
-  onChangeFilter: (ctx: Filter) => void;
+  onChange: (ctx: Filter) => void;
 }
 
 export default function Controls({
-  left,
+  itemsLeft,
   filter,
-  onClick,
-  onChangeFilter,
+  onChange,
 }: ControlsProps) {
+  const dispatch = useAppDispatch();
+
   return (
     <div className="flex justify-between p-2 font-light text-neutral-500 border-t border-neutral-300">
-      <div>{left} items left</div>
+      <div>{itemsLeft} items left</div>
       <div className="flex gap-4">
-        <Button
-          onClick={() => onChangeFilter("all")}
-          isActive={filter === "all"}
-        >
+        <Button onClick={() => onChange("all")} isActive={filter === "all"}>
           All
         </Button>
         <Button
-          onClick={() => onChangeFilter("active")}
+          onClick={() => onChange("active")}
           isActive={filter === "active"}
         >
           Active
         </Button>
         <Button
-          onClick={() => onChangeFilter("completed")}
+          onClick={() => onChange("completed")}
           isActive={filter === "completed"}
         >
           Completed
         </Button>
       </div>
-      <Button onClick={onClick}>Clear completed</Button>
+      <Button onClick={() => dispatch(completedTodoCleared())}>
+        Clear completed
+      </Button>
     </div>
   );
 }
